@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Remove Spelled Items Listings on Backpack.tf
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.4
 // @description  Remove listings that are made for spelled items (works for buy orders only)
 // @author       Viridian
 // @match        *://backpack.tf/*
