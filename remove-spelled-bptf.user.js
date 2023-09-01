@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Remove Spelled Items Listings on Backpack.tf
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.3
 // @description  Remove listings that are made for spelled items (works for buy orders only)
 // @author       Viridian
 // @match        *://backpack.tf/*
@@ -11,16 +11,20 @@
 (function() {
     'use strict';
 
+    // Function to check for keywords in a string
     const containsKeyword = (str, keywords) => keywords.some(keyword => str.includes(keyword));
 
+    // Function to create a DOM element with options
     const createElement = (type, options = {}) => {
         const element = document.createElement(type);
         Object.assign(element, options);
         return element;
     };
 
+    // Function to toggle display for a listing
     const toggleDisplay = (listing, displayStatus) => listing.style.display = displayStatus;
 
+    // Function to check if all listings are hidden
     const areAllListingsHidden = (mediaList, index) => {
         const lists = document.querySelectorAll(mediaList);
         if (lists.length > index) {
@@ -34,7 +38,7 @@
     const listings = document.querySelectorAll('li.listing');
     const removedListings = [];
 
-    
+    // Loop through and hide listings that match keywords
     listings.forEach(listing => {
         const commentElement = listing.querySelector('[data-listing_comment]');
 
@@ -53,15 +57,19 @@
             if (commentElement) {
                 const comment = commentElement.getAttribute('data-listing_comment');
                 if (containsKeyword(comment, keywords)) {
-                    toggleDisplay(listing, 'none');
-                    removedListings.push(listing);
+                    if (listing.style.display !== 'none') {
+                        toggleDisplay(listing, 'none');
+                        removedListings.push(listing);
+                    }
                 }
             }
         }
     });
 
+    // If no listings were removed, exit the function
     if (removedListings.length === 0) return;
 
+    // Create UI for removed listings
     const flexContainer = createElement('div');
     flexContainer.style.display = 'flex';
     flexContainer.style.justifyContent = 'space-between';
